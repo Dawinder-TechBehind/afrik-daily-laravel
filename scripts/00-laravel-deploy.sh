@@ -2,6 +2,8 @@
 echo "Running composer"
 composer global require hirak/prestissimo
 composer install --no-dev --working-dir=/var/www/html
+
+echo "Installing npm packages and building assets..."
 npm install --force
 npm run build
 

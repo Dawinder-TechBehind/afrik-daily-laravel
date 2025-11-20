@@ -91,52 +91,82 @@
         </div>
     </section>
     {{-- ------------- property card component end ------------- --}}
-    {{-- ------------- how it works component end ------------- --}}
+    {{-- ------------- how it works component start ------------- --}}
     <section class="py-12">
         <div class="max-w-7xl mx-auto px-4 md:px-10">
             <h2 class="text-2xl font-semibold text-center mb-10">How It Works</h2>
 
             <div class="flex flex-wrap justify-center gap-8 rounded-2xl shadow-lg py-6 ">
-            <!-- Step 1 -->
-            <div class="flex flex-col items-center text-center bg-white p-6 flex-1 min-w-[280px] sm:max-w-[45%] lg:max-w-[30%]">
-                <div class="bg-green-100 p-4 rounded-full mb-4">
-                
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-                </svg>
 
+                <!-- Step 1 -->
+                <div class="flex flex-col items-center text-center bg-white p-6 flex-1 min-w-[280px] sm:max-w-[45%] lg:max-w-[30%]">
+                    <div class="bg-green-100 p-4 rounded-full mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-lg mb-2">1. Create Your Account</h3>
+                    <p class="text-gray-500 text-sm">Sign up and complete KYC verification for security and compliance.</p>
                 </div>
-                <h3 class="font-semibold text-lg mb-2">1. Browse Properties</h3>
-                <p class="text-gray-500 text-sm">Explore a curated selection of high-yield rental properties.</p>
-            </div>
 
-            <!-- Step 2 -->
-            <div class="flex flex-col items-center text-center bg-white p-6 flex-1 min-w-[280px] sm:max-w-[45%] lg:max-w-[30%]">
-                <div class="bg-green-100 p-4 rounded-full mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
-                </svg>
-
+                <!-- Step 2 -->
+                <div class="flex flex-col items-center text-center bg-white p-6 flex-1 min-w-[280px] sm:max-w-[45%] lg:max-w-[30%]">
+                    <div class="bg-green-100 p-4 rounded-full mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-lg mb-2">2. Choose a Property</h3>
+                    <p class="text-gray-500 text-sm">Browse vetted real estate opportunities with ROI, timelines, and developer info.</p>
                 </div>
-                <h3 class="font-semibold text-lg mb-2">2. Purchase Shares</h3>
-                <p class="text-gray-500 text-sm">Invest in properties by buying shares, starting from just $100.</p>
-            </div>
 
-            <!-- Step 3 -->
-            <div class="flex flex-col items-center text-center bg-white p-6 flex-1 min-w-[280px] sm:max-w-[45%] lg:max-w-[30%]">
-                <div class="bg-green-100 p-4 rounded-full mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a2.25 2.25 0 0 0-2.25-2.25H15a3 3 0 1 1-6 0H5.25A2.25 2.25 0 0 0 3 12m18 0v6a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 9m18 0V6a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 6v3" />
-                </svg>
-
+                <!-- Step 3 -->
+                <div class="flex flex-col items-center text-center bg-white p-6 flex-1 min-w-[280px] sm:max-w-[45%] lg:max-w-[30%]">
+                    <div class="bg-green-100 p-4 rounded-full mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-lg mb-2">3. Buy Units</h3>
+                    <p class="text-gray-500 text-sm">Select your preferred number of units and complete secure payment.</p>
                 </div>
-                <h3 class="font-semibold text-lg mb-2">3. Earn Income</h3>
-                <p class="text-gray-500 text-sm">Receive your share of rental income and watch your investment grow.</p>
-            </div>
+
+                <!-- Step 4 -->
+                <div class="flex flex-col items-center text-center bg-white p-6 flex-1 min-w-[280px] sm:max-w-[45%] lg:max-w-[30%]">
+                    <div class="bg-green-100 p-4 rounded-full mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-lg mb-2">4. Own & Track Your Asset</h3>
+                    <p class="text-gray-500 text-sm">Instant allocation of units. Track milestones and performance in real time.</p>
+                </div>
+
+                <!-- Step 5 -->
+                <div class="flex flex-col items-center text-center bg-white p-6 flex-1 min-w-[280px] sm:max-w-[45%] lg:max-w-[30%]">
+                    <div class="bg-green-100 p-4 rounded-full mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-lg mb-2">5. Earn Rewards (Rent / Appreciation)</h3>
+                    <p class="text-gray-500 text-sm">Receive rental income or benefit from property value appreciation.</p>
+                </div>
+
+                <!-- Step 6 -->
+                <div class="flex flex-col items-center text-center bg-white p-6 flex-1 min-w-[280px] sm:max-w-[45%] lg:max-w-[30%]">
+                    <div class="bg-green-100 p-4 rounded-full mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-lg mb-2">6. Exit or Resell Anytime</h3>
+                    <p class="text-gray-500 text-sm">Sell units via buyback or resale. Exit value adjusts to updated valuation.</p>
+                </div>
+
             </div>
         </div>
     </section>
-
     {{-- ------------- how it works component end ------------- --}}
     {{-- ------------- clients component end ------------- --}}
     <section class="py-12">

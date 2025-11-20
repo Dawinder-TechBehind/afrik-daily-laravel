@@ -16,6 +16,14 @@ Route::get('/property-details', function () {
     return view('public.property.property');
    // return view('welcome');
 });
+Route::get('/signup', function () {
+    return view('public.auth.signup');
+   // return view('welcome');
+});
+Route::get('/loginn', function () {
+    return view('public.auth.login');
+   // return view('welcome');
+});
 
 Route::get('/dashboard', function () {
     return view('dashboard');

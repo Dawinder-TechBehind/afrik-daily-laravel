@@ -20,6 +20,22 @@ Route::get('/signup', function () {
     return view('public.auth.signup');
    // return view('welcome');
 });
+Route::get('/verify-otp', function () {
+    return view('public.auth.verify-otp');
+   // return view('welcome');
+});
+Route::get('/reset-password', function () {
+    return view('public.auth.reset-password');
+   // return view('welcome');
+});
+Route::get('/forget-password', function () {
+    return view('public.auth.forgot-password');
+   // return view('welcome');
+});
+Route::get('/setup-profile', function () {
+    return view('public.auth.setup-profile');
+   // return view('welcome');
+});
 Route::get('/loginn', function () {
     return view('public.auth.login');
    // return view('welcome');

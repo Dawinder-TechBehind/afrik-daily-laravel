@@ -41,12 +41,16 @@
          </div>
 
          <div class="flex max-lg:ml-auto space-x-4">
-            <a href="/signup" class="px-4 py-2 text-sm rounded-lg font-medium cursor-pointer tracking-wide text-white border bg-primary hover:bg-primary-dark transition-all">
-                Sign up
+            <a href="/admin" class="px-4 py-2 text-sm rounded-lg font-medium cursor-pointer tracking-wide text-white border bg-primary hover:bg-primary-dark transition-all">
+                Dashboard
             </a>
              <a href="/loginn" class="px-4 py-2 text-sm rounded-lg font-medium cursor-pointer tracking-wide text-slate-900 border bg-grey-light hover:bg-grey transition-all">
                 Login
              </a>
+
+              <a href="/signup" class="px-4 py-2 text-sm rounded-lg font-medium cursor-pointer tracking-wide text-white border bg-primary hover:bg-primary-dark transition-all">
+                Sign up
+            </a>
 
              <button id="toggleOpen" class="lg:hidden cursor-pointer">
                  <svg class="w-7 h-7" fill="#000" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">

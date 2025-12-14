@@ -7,7 +7,7 @@ Route::get('/', function () {
     return view('public.home.home');
 
    // return view('welcome');
-});
+})->name('home');
 Route::get('/all-properties', function () {
     return view('public.properties.properties');
    // return view('welcome');
@@ -51,4 +51,19 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+
+
+Route::middleware([])->group(function () {
+    Route::get('/admin', function () {
+        return view('admin.dashboard.welcome');
+    })->name('admin.index');
+})->prefix('admin')->name('admin.');
+
+
+
+
 require __DIR__.'/auth.php';
+
+
+
+

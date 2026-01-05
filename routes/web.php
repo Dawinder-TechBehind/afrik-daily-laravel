@@ -1,44 +1,42 @@
 <?php
 
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('public.home.home');
 
-   // return view('welcome');
+    // return view('welcome');
 })->name('home');
 Route::get('/all-properties', function () {
     return view('public.properties.properties');
-   // return view('welcome');
+    // return view('welcome');
 });
 Route::get('/property-details', function () {
     return view('public.property.property');
-   // return view('welcome');
+    // return view('welcome');
 });
-Route::get('/signup', function () {
-    return view('public.auth.signup');
-   // return view('welcome');
-});
+
 Route::get('/verify-otp', function () {
     return view('public.auth.verify-otp');
-   // return view('welcome');
-});
+    // return view('welcome');
+})->name('verify-otp');
 Route::get('/reset-password', function () {
     return view('public.auth.reset-password');
-   // return view('welcome');
+    // return view('welcome');
 });
 Route::get('/forget-password', function () {
     return view('public.auth.forgot-password');
-   // return view('welcome');
+    // return view('welcome');
 });
 Route::get('/setup-profile', function () {
     return view('public.auth.setup-profile');
-   // return view('welcome');
+    // return view('welcome');
 });
 Route::get('/loginn', function () {
     return view('public.auth.login');
-   // return view('welcome');
+    // return view('welcome');
 });
 
 Route::get('/dashboard', function () {
@@ -52,6 +50,15 @@ Route::middleware('auth')->group(function () {
 });
 
 
+Route::middleware('guest')->group(function () {
+    
+    Route::get('/signup', function () {
+        return view('public.auth.signup');
+        // return view('welcome');
+    });
+    Route::post('/register-user', [RegisteredUserController::class, 'store'])->name('register.store'); //handles registration form submission
+});
+
 
 Route::middleware([])->group(function () {
     Route::get('/admin', function () {
@@ -62,8 +69,4 @@ Route::middleware([])->group(function () {
 
 
 
-require __DIR__.'/auth.php';
-
-
-
-
+require __DIR__ . '/auth.php';

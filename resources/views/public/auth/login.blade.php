@@ -1,36 +1,38 @@
 @extends('public.layout.main')
 @section('content')
-<section class="py-10 flex items-center justify-center px-4 bg-red-5000">
-    <div class="w-full max-w-md bg-white p-8 rounded-xl ">
-        
-        <!-- Title -->
-        <h2 class="text-3xl font-semibold text-gray-900 mb-8 text-center">Login to your account</h2>
+    <section class="py-10 flex items-center justify-center px-4 bg-red-5000">
+        <div class="w-full max-w-md bg-white p-8 rounded-xl ">
 
-        <!-- Form -->
-        <form action="#" method="POST" class="space-y-5">
+            <!-- Title -->
+            <h2 class="text-3xl font-semibold text-gray-900 mb-8 text-center">Login to your account</h2>
 
-            <!-- Email -->
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Email address</label>
-                <input type="email" placeholder="Enter your email address"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-700 focus:ring-2 focus:ring-green-500 focus:outline-none">
-            </div>
+            <!-- Form -->
+            <form method="POST" action="{{ route('login') }}">
+                @csrf
+                <div>
+                    <x-input-label for="email" :value="__('Email')" />
+                    <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')"
+                        required autofocus autocomplete="username" />
+                    <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                </div>
 
-            <!-- Password -->
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                <input type="password" placeholder="Enter your password"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-700 focus:ring-2 focus:ring-green-500 focus:outline-none">
-            </div>
+                <!-- Password -->
+                <div class="mt-4">
+                    <x-input-label for="password" :value="__('Password')" />
 
-            <!-- Submit Button -->
-            <button type="button"
-                class="w-full bg-green-500 hover:bg-green-600 transition text-white font-medium py-3 rounded-lg">
-                Log In
-            </button>
+                    <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required
+                        autocomplete="current-password" />
 
-        </form>
-    </div>
-</section>
+                    <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                </div>
 
+                <!-- Submit Button -->
+                <button type="submit"
+                    class="w-full bg-green-500 hover:bg-green-600 transition text-white font-medium py-3 rounded-lg mt-4">
+                    Log In
+                </button>
+
+            </form>
+        </div>
+    </section>
 @endsection

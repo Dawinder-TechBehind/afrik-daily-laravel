@@ -1,10 +1,12 @@
  {{-- ------------- Header component start ------------- --}}
  <header class="flex shadow-md py-4 px-4 sm:px-10 bg-white min-h-[70px] tracking-wide relative z-50">
      <div class="flex flex-wrap items-center justify-between gap-5 w-full">
-         <a href="/" class="max-sm:hidden"><img src="https://cdn.shopify.com/s/files/1/0825/2224/3394/files/afrokdaily-full-logo-img.png"
-                 alt="logo" class="w-36" /></a>
-         <a href="/" class="hidden max-sm:block"><img src="https://cdn.shopify.com/s/files/1/0825/2224/3394/files/afrikdaily-short-logo.png"
-                 alt="logo" class="w-9" /></a>
+         <a href="/" class="max-sm:hidden"><img
+                 src="https://cdn.shopify.com/s/files/1/0825/2224/3394/files/afrokdaily-full-logo-img.png" alt="logo"
+                 class="w-36" /></a>
+         <a href="/" class="hidden max-sm:block"><img
+                 src="https://cdn.shopify.com/s/files/1/0825/2224/3394/files/afrikdaily-short-logo.png" alt="logo"
+                 class="w-9" /></a>
 
          <div id="collapseMenu"
              class="max-lg:hidden lg:!block max-lg:before:fixed max-lg:before:bg-black max-lg:before:opacity-50 max-lg:before:inset-0 max-lg:before:z-50">
@@ -41,17 +43,24 @@
          </div>
 
          <div class="flex max-lg:ml-auto space-x-4">
-            <a href="/admin" class="px-4 py-2 text-sm rounded-lg font-medium cursor-pointer tracking-wide text-white border bg-primary hover:bg-primary-dark transition-all">
-                Dashboard
-            </a>
-             <a href="/loginn" class="px-4 py-2 text-sm rounded-lg font-medium cursor-pointer tracking-wide text-slate-900 border bg-grey-light hover:bg-grey transition-all">
-                Login
+            @auth
+                 <a href="/admin"
+                     class="px-4 py-2 text-sm rounded-lg font-medium cursor-pointer tracking-wide text-white border bg-primary hover:bg-primary-dark transition-all">
+                     Dashboard
+                 </a>
+            @endauth
+
+                 @guest
+             <a href="/login"
+                 class="px-4 py-2 text-sm rounded-lg font-medium cursor-pointer tracking-wide text-slate-900 border bg-grey-light hover:bg-grey transition-all">
+                 Login
              </a>
 
-              <a href="/signup" class="px-4 py-2 text-sm rounded-lg font-medium cursor-pointer tracking-wide text-white border bg-primary hover:bg-primary-dark transition-all">
-                Sign up
-            </a>
-
+             <a href="/signup"
+                 class="px-4 py-2 text-sm rounded-lg font-medium cursor-pointer tracking-wide text-white border bg-primary hover:bg-primary-dark transition-all">
+                 Sign up
+             </a>
+             @endguest
              <button id="toggleOpen" class="lg:hidden cursor-pointer">
                  <svg class="w-7 h-7" fill="#000" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                      <path fill-rule="evenodd"

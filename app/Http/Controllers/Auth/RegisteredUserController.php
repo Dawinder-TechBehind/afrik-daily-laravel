@@ -3,12 +3,13 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Mail\OtpMail;
 use App\Models\User;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
@@ -29,6 +30,9 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        // ncreate maximum exicution time
+        set_time_limit(300);
+
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
@@ -37,6 +41,7 @@ class RegisteredUserController extends Controller
             'role' => ['required', 'string', 'exists:roles,name'],
         ]);
 
+        DB::beginTransaction();
         try {
 
             $user = User::create([
@@ -47,12 +52,20 @@ class RegisteredUserController extends Controller
 
             $user->assignRole($request->role);
 
-            event(new Registered($user));
+            // genrate otp
+            $user->otp_code = $user->generate();
+            $user->otp_expires_at = $user->expiry();
+            $user->save();
 
-            // Auth::login($user);
 
-            return redirect(route('login'))->with('success', 'Registration successful!');
+            // fire mail
+            Mail::to($user->email)->send(new OtpMail($user->otp_code, $user->name));
+
+            session(['otp_email' => $user->email]);
+            DB::commit();
+            return redirect()->route('otp-show')->with('success', 'A 6 digit code has been sent to your email! Please enter the code to verify your account.');
         } catch (\Exception $e) {
+            DB::rollBack();
             return back()->with('error', $e->getMessage());
         }
     }

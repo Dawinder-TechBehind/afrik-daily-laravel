@@ -1,40 +1,58 @@
 <?php
 
+use App\Http\Controllers\Auth\OtpController;
 use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
+
+
+
+
+
+
+
+// ==================== daw route start from here 
+
+Route::get('/verify-otp', [OtpController::class, 'create'])->name('otp-show');
+Route::post('/verify-otp', [OtpController::class, 'verify'])->name('otp-verify')->middleware('throttle:5,1');
+
+Route::post('/resend-otp', [OtpController::class, 'resend'])->name('otp.resend')->middleware('throttle:3,1'); // 3 attempts per minute
+
+// ============================
+
+
+
+
+
 
 Route::get('/', function () {
     return view('public.home.home');
 
-   // return view('welcome');
+    // return view('welcome');
 })->name('home');
 
 
 
 Route::get('/all-properties', function () {
     return view('public.properties.properties');
-   // return view('welcome');
+    // return view('welcome');
 });
 Route::get('/property-details', function () {
     return view('public.property.property');
-   // return view('welcome');
+    // return view('welcome');
 });
 
-Route::get('/verify-otp', function () {
-    return view('public.auth.verify-otp');
-   // return view('welcome');
-});
 Route::get('/reset-password', function () {
     return view('public.auth.reset-password');
-   // return view('welcome');
+    // return view('welcome');
 });
 Route::get('/forget-password', function () {
     return view('public.auth.forgot-password');
-   // return view('welcome');
+    // return view('welcome');
 });
 Route::get('/setup-profile', function () {
     return view('public.auth.setup-profile');
-   // return view('welcome');
+    // return view('welcome');
 });
 
 Route::get('/dashboard', function () {
@@ -57,10 +75,4 @@ Route::middleware([])->group(function () {
 })->prefix('admin')->name('admin.');
 
 
-
-
-require __DIR__.'/auth.php';
-
-
-
-
+require __DIR__ . '/auth.php';

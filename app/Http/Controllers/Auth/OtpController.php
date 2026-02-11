@@ -98,11 +98,11 @@ class OtpController extends Controller
                 'otp_code' => $otp,
                 'otp_expires_at' => $user->expiry(),
             ]);
-
+    
             // Send email silently
             Mail::to($user->email)->send(new OtpMail($otp, $user->name));
 
-            DB::commit();
+            DB::commit();   
             return back()->with('success', 'A New OTP has been sent to your email. Please check.');
         } catch (\Exception $e) {
             DB::rollBack();

@@ -53,7 +53,7 @@
                  @guest
              <a href="/login"
                  class="px-4 py-2 text-sm rounded-lg font-medium cursor-pointer tracking-wide text-slate-900 border bg-grey-light hover:bg-grey transition-all">
-                 Login here
+                 Login
              </a>
 
              <a href="/signup"

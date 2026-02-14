@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\User\UserController;
 use App\Http\Controllers\Auth\OtpController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Mail;
@@ -68,11 +69,18 @@ Route::middleware('auth')->group(function () {
 });
 
 
-Route::middleware([])->group(function () {
-    Route::get('/admin', function () {
-        return view('admin.dashboard.welcome');
-    })->name('admin.index');
-})->prefix('admin')->name('admin.');
+Route::middleware([])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+
+        Route::get('/', function () {
+            return view('admin.dashboard.welcome');
+        })->name('index');
+
+        Route::get('/users', [UserController::class, 'list'])->name('users.list');
+
+    });
 
 
 require __DIR__ . '/auth.php';

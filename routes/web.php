@@ -80,6 +80,12 @@ Route::middleware([])
 
         Route::get('/users', [UserController::class, 'list'])->name('users.list');
 
+        // KYC Routes
+        Route::get('/kyc', [\App\Http\Controllers\Admin\KycController::class, 'index'])->name('kyc.index');
+        Route::get('/kyc/states', [\App\Http\Controllers\Admin\KycController::class, 'getStates'])->name('kyc.states');
+        Route::get('/kyc/cities', [\App\Http\Controllers\Admin\KycController::class, 'getCities'])->name('kyc.cities');
+        Route::post('/kyc/save-step', [\App\Http\Controllers\Admin\KycController::class, 'saveStep'])->name('kyc.save');
+
     });
 
 

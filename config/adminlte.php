@@ -325,6 +325,11 @@ return [
             'url' => 'admin/',
             'icon' => 'far fa-fw fa-file',
         ],
+        [
+            'text' => 'KYC / Profile',
+            'url'  => 'admin/kyc',
+            'icon' => 'fas fa-fw fa-id-card',
+        ],
         // ['header' => 'account_settings'],
         // [
         //     'text' => 'profile',
@@ -448,7 +453,7 @@ return [
             ],
         ],
         'Select2' => [
-            'active' => false,
+            'active' => true,
             'files' => [
                 [
                     'type' => 'js',

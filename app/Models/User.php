@@ -65,4 +65,14 @@ class User extends Authenticatable
     {
         return Carbon::now()->greaterThan($time);
     }
+
+    public function kycDetail()
+    {
+        return $this->hasOne(KycDetail::class);
+    }
+
+    public function kycFiles()
+    {
+        return $this->hasMany(KycFile::class);
+    }
 }

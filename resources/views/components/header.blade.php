@@ -44,7 +44,7 @@
 
          <div class="flex max-lg:ml-auto space-x-4">
             @auth
-                 <a href="/admin"
+                 <a href="/dashboard"
                      class="px-4 py-2 text-sm rounded-lg font-medium cursor-pointer tracking-wide text-white border bg-primary hover:bg-primary-dark transition-all">
                      Dashboard
                  </a>

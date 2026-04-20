@@ -57,7 +57,10 @@ Route::get('/setup-profile', function () {
 });
 
 Route::get('/dashboard', function () {
-    return redirect()->route('admin.index');
+    if (auth()->check() && auth()->user()->hasRole('admin')) {
+        return redirect()->route('admin.index');
+    }
+    return redirect()->route('investor.index');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 
@@ -69,7 +72,7 @@ Route::middleware('auth')->group(function () {
 });
 
 
-Route::middleware([])
+Route::middleware(['auth', 'role:admin'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
@@ -80,11 +83,31 @@ Route::middleware([])
 
         Route::get('/users', [UserController::class, 'list'])->name('users.list');
 
-        // KYC Routes
-        Route::get('/kyc', [\App\Http\Controllers\Admin\KycController::class, 'index'])->name('kyc.index');
+        // KYC Review Routes
+        Route::get('/kyc', [\App\Http\Controllers\Admin\KYCReviewController::class, 'index'])->name('kyc.index');
+        Route::get('/kyc/{user}/review', [\App\Http\Controllers\Admin\KYCReviewController::class, 'show'])->name('kyc.review');
+        Route::post('/kyc/{user}/approve', [\App\Http\Controllers\Admin\KYCReviewController::class, 'approve'])->name('kyc.approve');
+        Route::post('/kyc/{user}/reject', [\App\Http\Controllers\Admin\KYCReviewController::class, 'reject'])->name('kyc.reject');
+        Route::post('/kyc/save-step', [\App\Http\Controllers\Admin\KycController::class, 'saveStep'])->name('kyc.save');
         Route::get('/kyc/states', [\App\Http\Controllers\Admin\KycController::class, 'getStates'])->name('kyc.states');
         Route::get('/kyc/cities', [\App\Http\Controllers\Admin\KycController::class, 'getCities'])->name('kyc.cities');
+
+    });
+
+
+Route::middleware(['auth', 'role:investor'])
+    ->prefix('investor')
+    ->name('investor.')
+    ->group(function () {
+
+        Route::get('/', function () {
+            return view('admin.dashboard.welcome');
+        })->name('index');
+
+        Route::get('/kyc', [\App\Http\Controllers\Admin\KycController::class, 'index'])->name('kyc.index');
         Route::post('/kyc/save-step', [\App\Http\Controllers\Admin\KycController::class, 'saveStep'])->name('kyc.save');
+        Route::get('/kyc/states', [\App\Http\Controllers\Admin\KycController::class, 'getStates'])->name('kyc.states');
+        Route::get('/kyc/cities', [\App\Http\Controllers\Admin\KycController::class, 'getCities'])->name('kyc.cities');
 
     });
 

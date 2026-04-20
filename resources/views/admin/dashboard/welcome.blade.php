@@ -7,7 +7,12 @@
 @stop
 
 @section('content')
-    <p>Welcome to this Afrik Daily admin panel.</p>
+    @can('is-admin')
+        <p>Welcome to the Afrik Daily Admin Dashboard.</p>
+    @else
+        <p>Welcome to the Afrik Daily Investor Dashboard.</p>
+    @endcan
+    @can('is-admin')
     <div class="row">
         <div class="col-lg-3 col-6">
             <!-- small box -->
@@ -84,6 +89,64 @@
         </div>
         <!-- ./col -->
     </div>
+    @endcan
+
+    @can('is-investor')
+        @php
+            $kycStatus = auth()->user()->kycDetail->kyc_status ?? 'draft';
+            $rejectionReason = auth()->user()->kycDetail->rejection_reason ?? null;
+        @endphp
+
+        @if($kycStatus === 'rejected' && $rejectionReason)
+            <div class="alert alert-danger">
+                <h5><i class="icon fas fa-ban"></i> KYC Rejected!</h5>
+                Your KYC application was rejected for the following reason:<br>
+                <strong>{{ $rejectionReason }}</strong><br><br>
+                <!-- Update this link to point to the actual KYC edit page once created -->
+                <a href="{{ route('investor.kyc.index') }}" class="btn btn-sm btn-outline-light">Update KYC Details</a>
+            </div>
+        @elseif($kycStatus === 'approved')
+            <div class="alert alert-success">
+                <h5><i class="icon fas fa-check"></i> KYC Approved!</h5>
+                Your account is fully verified. You can now start investing.
+            </div>
+        @elseif($kycStatus === 'pending')
+            <div class="alert alert-warning">
+                <h5><i class="icon fas fa-exclamation-triangle"></i> KYC Pending Review</h5>
+                Your KYC application is currently being reviewed by an admin.
+            </div>
+        @else
+            <div class="alert alert-info">
+                <h5><i class="icon fas fa-info"></i> Complete your KYC</h5>
+                Please complete your KYC to unlock all features.
+            </div>
+        @endif
+
+        <div class="row">
+            <div class="col-lg-4 col-6">
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        <h3>$0.00</h3>
+                        <p>My Portfolio</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-6">
+                <div class="small-box bg-primary">
+                    <div class="inner">
+                        <h3>0</h3>
+                        <p>Active Investments</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endcan
 
 
     

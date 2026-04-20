@@ -324,11 +324,31 @@ return [
             'text' => 'Dashboard',
             'url' => 'admin/',
             'icon' => 'far fa-fw fa-file',
+            'can'  => 'is-admin',
         ],
         [
-            'text' => 'KYC / Profile',
+            'text' => 'KYC Review',
             'url'  => 'admin/kyc',
             'icon' => 'fas fa-fw fa-id-card',
+            'can'  => 'is-admin',
+        ],
+        [
+            'text' => 'Users',
+            'url'  => 'admin/users',
+            'icon' => 'fas fa-fw fa-users',
+            'can'  => 'is-admin',
+        ],
+        [
+            'text' => 'Dashboard',
+            'url' => 'investor/',
+            'icon' => 'far fa-fw fa-file',
+            'can'  => 'is-investor',
+        ],
+        [
+            'text' => 'My KYC',
+            'url'  => 'investor/kyc',
+            'icon' => 'fas fa-fw fa-id-card',
+            'can'  => 'is-investor',
         ],
         // ['header' => 'account_settings'],
         // [

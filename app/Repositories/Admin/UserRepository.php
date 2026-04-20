@@ -9,9 +9,17 @@ class UserRepository implements UserInterface
 { 
     
     public function listUsersBySearchAndPaginate( Request $request ){
-        $data['users'] = User::withoutRole('admin')
-                                ->orderByRaw('id desc')
-                                ->paginate(21);
+        $query = User::withoutRole('admin')->with(['roles', 'kycDetail'])->orderByDesc('id');
+        
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        $data['users'] = $query->paginate(21);
         $data['code'] = 200;
         return $data;
     }

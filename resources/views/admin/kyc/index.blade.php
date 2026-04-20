@@ -40,6 +40,7 @@
 @php
     $isLocked = isset($kyc) && in_array($kyc->kyc_status, ['pending', 'approved']);
     $userFiles = auth()->user()->kycFiles ?? collect();
+    $routePrefix = auth()->user()->hasRole('admin') ? 'admin.' : 'investor.';
 @endphp
 
 @if(isset($kyc))
@@ -394,7 +395,7 @@
         $('#country_id').change(function() {
             let cid = $(this).val();
             if(cid) {
-                $.get('{{ route("admin.kyc.states") }}', {country_id: cid}, function(data) {
+                $.get('{{ route($routePrefix . "kyc.states") }}', {country_id: cid}, function(data) {
                     $('#state_id').empty().append('<option value="">Select State...</option>');
                     $.each(data, function(index, state) {
                         $('#state_id').append('<option value="'+state.id+'">'+state.name+'</option>');
@@ -407,7 +408,7 @@
         $('#state_id').change(function() {
             let sid = $(this).val();
             if(sid) {
-                $.get('{{ route("admin.kyc.cities") }}', {state_id: sid}, function(data) {
+                $.get('{{ route($routePrefix . "kyc.cities") }}', {state_id: sid}, function(data) {
                     $('#city_id').empty().append('<option value="">Select City...</option>');
                     $.each(data, function(index, city) {
                         $('#city_id').append('<option value="'+city.id+'">'+city.name+'</option>');
@@ -434,7 +435,7 @@
             let formData = new FormData(this);
             
             $.ajax({
-                url: '{{ route("admin.kyc.save") }}',
+                url: '{{ route($routePrefix . "kyc.save") }}',
                 type: 'POST',
                 data: formData,
                 contentType: false,

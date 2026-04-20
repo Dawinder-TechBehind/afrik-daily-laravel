@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Pagination\Paginator;
 
 class AppServiceProvider extends ServiceProvider
@@ -25,5 +26,13 @@ class AppServiceProvider extends ServiceProvider
              URL::forceScheme('https');
          }
          Paginator::useBootstrapFive();
+
+         Gate::define('is-admin', function ($user) {
+             return $user->hasRole('admin');
+         });
+
+         Gate::define('is-investor', function ($user) {
+             return $user->hasRole('investor');
+         });
     }
 }

@@ -205,7 +205,13 @@
                                     @if($isLocked)
                                         @php $idFront = $userFiles->where('file_name', 'id_front')->first(); @endphp
                                         @if($idFront)
-                                            <div class="mt-2"><a href="{{ $idFront->file->url() }}" target="_blank" class="btn btn-sm btn-info w-100"><i class="fas fa-eye"></i> View Uploaded Image</a></div>
+                                            <div class="mt-2">
+                                                @if(in_array(strtolower(pathinfo($idFront->file->file_path ?? '', PATHINFO_EXTENSION)), ['jpg','jpeg','png']))
+                                                    <a href="javascript:void(0)" class="btn btn-sm btn-info w-100 lightbox-trigger" data-image="{{ $idFront->file->url() }}"><i class="fas fa-eye"></i> View Uploaded Image</a>
+                                                @else
+                                                    <a href="{{ $idFront->file->url() }}" target="_blank" class="btn btn-sm btn-info w-100"><i class="fas fa-eye"></i> View Uploaded File</a>
+                                                @endif
+                                            </div>
                                         @else
                                             <div class="mt-2 text-muted">No file uploaded</div>
                                         @endif
@@ -218,7 +224,13 @@
                                     @if($isLocked)
                                         @php $idBack = $userFiles->where('file_name', 'id_back')->first(); @endphp
                                         @if($idBack)
-                                            <div class="mt-2"><a href="{{ $idBack->file->url() }}" target="_blank" class="btn btn-sm btn-info w-100"><i class="fas fa-eye"></i> View Uploaded Image</a></div>
+                                            <div class="mt-2">
+                                                @if(in_array(strtolower(pathinfo($idBack->file->file_path ?? '', PATHINFO_EXTENSION)), ['jpg','jpeg','png']))
+                                                    <a href="javascript:void(0)" class="btn btn-sm btn-info w-100 lightbox-trigger" data-image="{{ $idBack->file->url() }}"><i class="fas fa-eye"></i> View Uploaded Image</a>
+                                                @else
+                                                    <a href="{{ $idBack->file->url() }}" target="_blank" class="btn btn-sm btn-info w-100"><i class="fas fa-eye"></i> View Uploaded File</a>
+                                                @endif
+                                            </div>
                                         @else
                                             <div class="mt-2 text-muted">No file uploaded</div>
                                         @endif
@@ -241,17 +253,51 @@
                             <input type="hidden" name="step_number" value="3">
                             <fieldset {{ $isLocked ? 'disabled' : '' }}>
                             <div class="row">
-                                <div class="col-md-6 mb-4">
-                                    <label>Upload Selfie Image <span class="text-danger">*</span> <small class="text-muted">(jpg, png; clear face required)</small></label>
+                                <div class="col-md-8 mb-4">
+                                    <label>Selfie Image <span class="text-danger">*</span> <small class="text-muted">(clear face required)</small></label>
                                     @if($isLocked)
                                         @php $selfie = $userFiles->where('file_name', 'selfie')->first(); @endphp
                                         @if($selfie)
-                                            <div class="mt-2"><a href="{{ $selfie->file->url() }}" target="_blank" class="btn btn-sm btn-info w-100"><i class="fas fa-eye"></i> View Uploaded Image</a></div>
+                                            <div class="mt-2">
+                                                @if(in_array(strtolower(pathinfo($selfie->file->file_path ?? '', PATHINFO_EXTENSION)), ['jpg','jpeg','png']))
+                                                    <a href="javascript:void(0)" class="btn btn-sm btn-info w-100 lightbox-trigger" data-image="{{ $selfie->file->url() }}"><i class="fas fa-eye"></i> View Uploaded Image</a>
+                                                @else
+                                                    <a href="{{ $selfie->file->url() }}" target="_blank" class="btn btn-sm btn-info w-100"><i class="fas fa-eye"></i> View Uploaded File</a>
+                                                @endif
+                                            </div>
                                         @else
                                             <div class="mt-2 text-muted">No file uploaded</div>
                                         @endif
                                     @else
-                                        <input type="file" name="selfie" class="form-control-file" accept=".jpg,.jpeg,.png" @if(!isset($kyc) || !$kyc->kyc_step) required @endif>
+                                        <div class="mb-3">
+                                            <div class="custom-control custom-radio custom-control-inline">
+                                                <input type="radio" id="upload_type_device" name="upload_type" class="custom-control-input" value="device" checked>
+                                                <label class="custom-control-label" for="upload_type_device">Upload from Device</label>
+                                            </div>
+                                            <div class="custom-control custom-radio custom-control-inline">
+                                                <input type="radio" id="upload_type_camera" name="upload_type" class="custom-control-input" value="camera">
+                                                <label class="custom-control-label" for="upload_type_camera">Capture from Camera</label>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Device Upload -->
+                                        <div id="device_upload_section">
+                                            <input type="file" name="selfie" id="selfie_file" class="form-control-file" accept=".jpg,.jpeg,.png" @if(!isset($kyc) || !$kyc->kyc_step) required @endif>
+                                        </div>
+
+                                        <!-- Camera Capture -->
+                                        <div id="camera_capture_section" style="display: none;">
+                                            <div class="border p-2 text-center bg-light rounded mb-2">
+                                                <video id="camera_video" width="100%" style="max-width:400px; display:none;" autoplay playsinline></video>
+                                                <canvas id="camera_canvas" style="display:none; max-width:400px; width:100%;"></canvas>
+                                                <img id="camera_preview" src="" style="display:none; max-width:400px; width:100%; border:2px solid #28a745;" class="rounded mx-auto">
+                                            </div>
+                                            <div class="text-center">
+                                                <button type="button" class="btn btn-info btn-sm" id="btn_start_camera"><i class="fas fa-camera"></i> Open Camera</button>
+                                                <button type="button" class="btn btn-success btn-sm" id="btn_capture_image" style="display:none;"><i class="fas fa-circle"></i> Capture</button>
+                                                <button type="button" class="btn btn-warning btn-sm" id="btn_retake_image" style="display:none;"><i class="fas fa-redo"></i> Retake</button>
+                                            </div>
+                                        </div>
                                     @endif
                                 </div>
                             </div>
@@ -274,7 +320,13 @@
                                     @if($isLocked)
                                         @php $addressProof = $userFiles->where('file_name', 'address_proof')->first(); @endphp
                                         @if($addressProof)
-                                            <div class="mt-2" style="max-width:300px;"><a href="{{ $addressProof->file->url() }}" target="_blank" class="btn btn-sm btn-info w-100"><i class="fas fa-eye"></i> View Uploaded Document</a></div>
+                                            <div class="mt-2" style="max-width:300px;">
+                                                @if(in_array(strtolower(pathinfo($addressProof->file->file_path ?? '', PATHINFO_EXTENSION)), ['jpg','jpeg','png']))
+                                                    <a href="javascript:void(0)" class="btn btn-sm btn-info w-100 lightbox-trigger" data-image="{{ $addressProof->file->url() }}"><i class="fas fa-eye"></i> View Uploaded Document</a>
+                                                @else
+                                                    <a href="{{ $addressProof->file->url() }}" target="_blank" class="btn btn-sm btn-info w-100"><i class="fas fa-eye"></i> View Uploaded File</a>
+                                                @endif
+                                            </div>
                                         @else
                                             <div class="mt-2 text-muted">No file uploaded</div>
                                         @endif
@@ -365,12 +417,52 @@
         </div>
     </div>
 </div>
+
+<!-- Lightbox Modal -->
+<div class="modal fade" id="lightboxModal" tabindex="-1" role="dialog" aria-hidden="true" style="background-color: rgba(0,0,0,0.85);">
+  <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+    <div class="modal-content bg-transparent border-0 shadow-none">
+      <div class="modal-header border-0 p-3" style="position: absolute; right: 0; top: 0; z-index: 1055;">
+        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close" style="opacity: 1; font-size: 2.5rem; text-shadow: 0 1px 3px rgba(0,0,0,0.5);">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body text-center p-0" style="overflow: auto; max-height: 100vh;">
+        <img id="lightboxImage" src="" alt="Document Preview" class="img-fluid" style="max-height: 90vh; cursor: zoom-in; object-fit: contain;">
+      </div>
+    </div>
+  </div>
+</div>
+
 @stop
 
 @section('js')
 <script>
     $(document).ready(function() {
         
+        // Lightbox
+        $('.lightbox-trigger').click(function() {
+            var imgSrc = $(this).data('image');
+            $('#lightboxImage').attr('src', imgSrc);
+            $('#lightboxModal').modal('show');
+        });
+
+        let zoomed = false;
+        $('#lightboxImage').click(function() {
+            if(!zoomed) {
+                $(this).css({ 'max-height': 'none', 'width': '100%', 'cursor': 'zoom-out' });
+                zoomed = true;
+            } else {
+                $(this).css({ 'max-height': '90vh', 'width': 'auto', 'cursor': 'zoom-in' });
+                zoomed = false;
+            }
+        });
+
+        $('#lightboxModal').on('hidden.bs.modal', function () {
+            $('#lightboxImage').css({ 'max-height': '90vh', 'width': 'auto', 'cursor': 'zoom-in' });
+            zoomed = false;
+        });
+
         // Initialize Select2 integration
         $('.select2').select2({
             theme: 'default', // standard sizing matching AdminLTE logic via custom CSS above
@@ -418,6 +510,85 @@
             }
         });
 
+        // --- WebRTC Camera Logic ---
+        let video = document.getElementById('camera_video');
+        let canvas = document.getElementById('camera_canvas');
+        let preview = document.getElementById('camera_preview');
+        let stream = null;
+        let capturedBlob = null;
+
+        $('input[name="upload_type"]').change(function() {
+            if ($(this).val() === 'camera') {
+                $('#device_upload_section').hide();
+                $('#selfie_file').removeAttr('required');
+                $('#camera_capture_section').show();
+            } else {
+                $('#device_upload_section').show();
+                $('#selfie_file').attr('required', true);
+                $('#camera_capture_section').hide();
+                stopCamera();
+            }
+        });
+
+        $('#btn_start_camera').click(function() {
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: true }).then(function(mediaStream) {
+                    stream = mediaStream;
+                    video.srcObject = stream;
+                    video.style.display = 'block';
+                    preview.style.display = 'none';
+                    $('#btn_start_camera').hide();
+                    $('#btn_capture_image').show();
+                    $('#btn_retake_image').hide();
+                }).catch(function(err) {
+                    alert("Could not access camera. Please ensure you have granted permissions and are using a secure connection (HTTPS).");
+                    console.log("Camera error: ", err);
+                });
+            } else {
+                alert("Your browser does not support camera access.");
+            }
+        });
+
+        $('#btn_capture_image').click(function() {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+            
+            // Convert to blob
+            canvas.toBlob(function(blob) {
+                capturedBlob = blob;
+                let url = URL.createObjectURL(blob);
+                preview.src = url;
+                
+                video.style.display = 'none';
+                preview.style.display = 'block';
+                
+                $('#btn_capture_image').hide();
+                $('#btn_retake_image').show();
+                
+                stopCamera();
+            }, 'image/jpeg', 0.9);
+        });
+
+        $('#btn_retake_image').click(function() {
+            capturedBlob = null;
+            $('#btn_start_camera').click();
+        });
+
+        function stopCamera() {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+            }
+        }
+
+        // Clean up camera on tab change
+        $('a[data-toggle="pill"]').on('shown.bs.tab', function (e) {
+            if ($(e.target).attr('id') !== 'tab3-tab') {
+                stopCamera();
+            }
+        });
+
         // AJAX Request Engine
         $('.kyc-form').on('submit', function(e) {
             e.preventDefault();
@@ -430,9 +601,38 @@
             form.find('.invalid-feedback').remove();
             form.find('.is-invalid').removeClass('is-invalid');
             
+            // Check file sizes on frontend
+            let maxSizeBytes = 2 * 1024 * 1024; // 2MB
+            let fileOversize = false;
+            form.find('input[type="file"]').each(function() {
+                if (this.files && this.files[0]) {
+                    if (this.files[0].size > maxSizeBytes) {
+                        $(this).addClass('is-invalid');
+                        $(this).after('<div class="invalid-feedback" style="display:block;">File size exceeds 2MB limit.</div>');
+                        fileOversize = true;
+                    }
+                }
+            });
+
+            if (fileOversize) {
+                if (typeof toastr !== 'undefined') toastr.error('One or more files exceed the 2MB size limit.');
+                return;
+            }
+
+            // Validate camera capture if camera mode is active
+            if (stepNum == 3 && $('input[name="upload_type"]:checked').val() === 'camera' && !capturedBlob) {
+                if (typeof toastr !== 'undefined') toastr.error('Please capture a selfie from the camera.');
+                return;
+            }
+
             btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Saving...');
             
             let formData = new FormData(this);
+
+            // Append captured camera image if available
+            if (stepNum == 3 && $('input[name="upload_type"]:checked').val() === 'camera' && capturedBlob) {
+                formData.set('selfie', capturedBlob, 'camera_selfie.jpg');
+            }
             
             $.ajax({
                 url: '{{ route($routePrefix . "kyc.save") }}',

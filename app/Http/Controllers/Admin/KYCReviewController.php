@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\KycHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -33,6 +34,12 @@ class KYCReviewController extends Controller
                     'kyc_status' => 'approved',
                     'rejection_reason' => null
                 ]);
+
+                KycHistory::create([
+                    'kyc_detail_id' => $user->kycDetail->id,
+                    'user_id' => auth()->id(),
+                    'description' => 'Admin approved KYC application'
+                ]);
             }
 
             DB::commit();
@@ -46,8 +53,11 @@ class KYCReviewController extends Controller
     public function reject(Request $request, User $user)
     {
         $request->validate([
-            'rejection_reason' => 'required|string|max:1000'
+            'rejection_reason' => 'required|string|max:1000',
+            'custom_reason' => 'nullable|string|max:1000'
         ]);
+
+        $reason = $request->rejection_reason === 'Other' ? $request->custom_reason : $request->rejection_reason;
 
         try {
             DB::beginTransaction();
@@ -55,7 +65,14 @@ class KYCReviewController extends Controller
             if ($user->kycDetail) {
                 $user->kycDetail->update([
                     'kyc_status' => 'rejected',
-                    'rejection_reason' => $request->rejection_reason
+                    'rejection_reason' => $reason
+                ]);
+
+                KycHistory::create([
+                    'kyc_detail_id' => $user->kycDetail->id,
+                    'user_id' => auth()->id(),
+                    'description' => 'Admin rejected KYC application',
+                    'note' => $reason
                 ]);
             }
 

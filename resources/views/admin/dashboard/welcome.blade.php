@@ -2,16 +2,7 @@
 
 @section('title', 'Dashboard')
 
-@section('content_header')
-    <h1>Dashboard</h1>
-@stop
-
 @section('content')
-    @can('is-admin')
-        <p>Welcome to the Afrik Daily Admin Dashboard.</p>
-    @else
-        <p>Welcome to the Afrik Daily Investor Dashboard.</p>
-    @endcan
     @can('is-admin')
     <div class="row">
         <div class="col-lg-3 col-6">

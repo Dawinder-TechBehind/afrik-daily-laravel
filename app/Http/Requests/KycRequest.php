@@ -41,20 +41,20 @@ class KycRequest extends FormRequest
         if ($step == 2) {
             return [
                 'id_type' => 'required|in:national_id,passport,drivers_license',
-                'id_front' => 'required|file|mimes:jpg,png,pdf|max:5120',
-                'id_back' => 'nullable|file|mimes:jpg,png,pdf|max:5120',
+                'id_front' => 'required|file|mimes:jpg,png,pdf|max:2048',
+                'id_back' => 'nullable|file|mimes:jpg,png,pdf|max:2048',
             ];
         }
 
         if ($step == 3) {
             return [
-                'selfie' => 'required|file|mimes:jpg,png|max:5120',
+                'selfie' => 'required|file|mimes:jpg,png|max:2048',
             ];
         }
 
         if ($step == 4) {
             return [
-                'address_proof' => 'required|file|mimes:jpg,png,pdf|max:5120',
+                'address_proof' => 'required|file|mimes:jpg,png,pdf|max:2048',
             ];
         }
 

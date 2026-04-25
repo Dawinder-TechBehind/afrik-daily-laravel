@@ -9,6 +9,7 @@ use App\Models\SourceOfFund;
 use App\Models\File;
 use App\Models\KycFile;
 use App\Models\KycDetail;
+use App\Models\KycHistory;
 use App\Models\State;
 use App\Models\City;
 use Illuminate\Http\Request;
@@ -42,6 +43,8 @@ class KycController extends Controller
         $user = auth()->user();
         $step = $request->input('step_number');
         $kycDetail = KycDetail::firstOrNew(['user_id' => $user->id]);
+
+        $isNew = !$kycDetail->exists;
 
         if (in_array($kycDetail->kyc_status, ['pending', 'approved'])) {
             return response()->json([
@@ -91,7 +94,28 @@ class KycController extends Controller
             $kycDetail->kyc_step = $step;
         }
 
+        if ($step == 6) {
+            $kycDetail->submitted_at = now();
+        }
+
         $kycDetail->save();
+
+        if ($isNew && $step == 1) {
+            KycHistory::create([
+                'kyc_detail_id' => $kycDetail->id,
+                'user_id' => $user->id,
+                'description' => 'User started KYC application'
+            ]);
+        }
+
+        if ($step == 6) {
+            $description = ($kycDetail->kyc_status == 'rejected') ? 'User resubmitted KYC application' : 'User submitted KYC application';
+            KycHistory::create([
+                'kyc_detail_id' => $kycDetail->id,
+                'user_id' => $user->id,
+                'description' => $description
+            ]);
+        }
 
         return response()->json([
             'status' => true,

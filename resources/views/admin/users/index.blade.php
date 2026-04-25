@@ -57,6 +57,8 @@
                                     'approved' => 'badge-success',
                                     'rejected' => 'badge-danger',
                                     'draft' => 'badge-warning',
+                                            'pending' => 'bg-warning',
+
                                     default => 'badge-info'
                                 };
                             @endphp

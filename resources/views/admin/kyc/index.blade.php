@@ -202,39 +202,39 @@
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label>Upload ID Front <span class="text-danger">*</span> <small class="text-muted">(jpg, png, pdf)</small></label>
-                                    @if($isLocked)
-                                        @php $idFront = $userFiles->where('file_name', 'id_front')->first(); @endphp
-                                        @if($idFront)
-                                            <div class="mt-2">
-                                                @if(in_array(strtolower(pathinfo($idFront->file->file_path ?? '', PATHINFO_EXTENSION)), ['jpg','jpeg','png']))
-                                                    <a href="javascript:void(0)" class="btn btn-sm btn-info w-100 lightbox-trigger" data-image="{{ $idFront->file->url() }}"><i class="fas fa-eye"></i> View Uploaded Image</a>
-                                                @else
-                                                    <a href="{{ $idFront->file->url() }}" target="_blank" class="btn btn-sm btn-info w-100"><i class="fas fa-eye"></i> View Uploaded File</a>
-                                                @endif
-                                            </div>
-                                        @else
-                                            <div class="mt-2 text-muted">No file uploaded</div>
-                                        @endif
+                                    @php $idFront = $userFiles->where('file_name', 'id_front')->first(); @endphp
+                                    @if($idFront)
+                                        <div class="mb-2 p-2 border rounded bg-light d-flex align-items-center justify-content-between">
+                                            <span class="badge badge-success"><i class="fas fa-check-circle"></i> File Uploaded</span>
+                                            @if(in_array(strtolower(pathinfo($idFront->file->file_path ?? '', PATHINFO_EXTENSION)), ['jpg','jpeg','png']))
+                                                <a href="javascript:void(0)" class="btn btn-sm btn-info lightbox-trigger" data-image="{{ $idFront->file->url() }}"><i class="fas fa-eye"></i> View File</a>
+                                            @else
+                                                <a href="{{ $idFront->file->url() }}" target="_blank" class="btn btn-sm btn-info"><i class="fas fa-eye"></i> View File</a>
+                                            @endif
+                                        </div>
                                     @else
-                                        <input type="file" name="id_front" class="form-control-file" accept=".jpg,.jpeg,.png,.pdf" @if(!isset($kyc) || !$kyc->kyc_step) required @endif>
+                                        @if($isLocked) <div class="mt-2 text-muted">No file uploaded</div> @endif
+                                    @endif
+                                    @if(!$isLocked)
+                                        <input type="file" name="id_front" class="form-control-file" accept=".jpg,.jpeg,.png,.pdf" @if(!isset($kyc) || !$kyc->kyc_step || !$idFront) required @endif>
                                     @endif
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label>Upload ID Back <small class="text-muted">(optional)</small></label>
-                                    @if($isLocked)
-                                        @php $idBack = $userFiles->where('file_name', 'id_back')->first(); @endphp
-                                        @if($idBack)
-                                            <div class="mt-2">
-                                                @if(in_array(strtolower(pathinfo($idBack->file->file_path ?? '', PATHINFO_EXTENSION)), ['jpg','jpeg','png']))
-                                                    <a href="javascript:void(0)" class="btn btn-sm btn-info w-100 lightbox-trigger" data-image="{{ $idBack->file->url() }}"><i class="fas fa-eye"></i> View Uploaded Image</a>
-                                                @else
-                                                    <a href="{{ $idBack->file->url() }}" target="_blank" class="btn btn-sm btn-info w-100"><i class="fas fa-eye"></i> View Uploaded File</a>
-                                                @endif
-                                            </div>
-                                        @else
-                                            <div class="mt-2 text-muted">No file uploaded</div>
-                                        @endif
+                                    @php $idBack = $userFiles->where('file_name', 'id_back')->first(); @endphp
+                                    @if($idBack)
+                                        <div class="mb-2 p-2 border rounded bg-light d-flex align-items-center justify-content-between">
+                                            <span class="badge badge-success"><i class="fas fa-check-circle"></i> File Uploaded</span>
+                                            @if(in_array(strtolower(pathinfo($idBack->file->file_path ?? '', PATHINFO_EXTENSION)), ['jpg','jpeg','png']))
+                                                <a href="javascript:void(0)" class="btn btn-sm btn-info lightbox-trigger" data-image="{{ $idBack->file->url() }}"><i class="fas fa-eye"></i> View File</a>
+                                            @else
+                                                <a href="{{ $idBack->file->url() }}" target="_blank" class="btn btn-sm btn-info"><i class="fas fa-eye"></i> View File</a>
+                                            @endif
+                                        </div>
                                     @else
+                                        @if($isLocked) <div class="mt-2 text-muted">No file uploaded</div> @endif
+                                    @endif
+                                    @if(!$isLocked)
                                         <input type="file" name="id_back" class="form-control-file" accept=".jpg,.jpeg,.png,.pdf">
                                     @endif
                                 </div>
@@ -255,20 +255,21 @@
                             <div class="row">
                                 <div class="col-md-8 mb-4">
                                     <label>Selfie Image <span class="text-danger">*</span> <small class="text-muted">(clear face required)</small></label>
-                                    @if($isLocked)
-                                        @php $selfie = $userFiles->where('file_name', 'selfie')->first(); @endphp
-                                        @if($selfie)
-                                            <div class="mt-2">
-                                                @if(in_array(strtolower(pathinfo($selfie->file->file_path ?? '', PATHINFO_EXTENSION)), ['jpg','jpeg','png']))
-                                                    <a href="javascript:void(0)" class="btn btn-sm btn-info w-100 lightbox-trigger" data-image="{{ $selfie->file->url() }}"><i class="fas fa-eye"></i> View Uploaded Image</a>
-                                                @else
-                                                    <a href="{{ $selfie->file->url() }}" target="_blank" class="btn btn-sm btn-info w-100"><i class="fas fa-eye"></i> View Uploaded File</a>
-                                                @endif
-                                            </div>
-                                        @else
-                                            <div class="mt-2 text-muted">No file uploaded</div>
-                                        @endif
+                                    @php $selfie = $userFiles->where('file_name', 'selfie')->first(); @endphp
+                                    @if($selfie)
+                                        <div class="mb-2 p-2 border rounded bg-light d-flex align-items-center justify-content-between" style="max-width: 400px;">
+                                            <span class="badge badge-success"><i class="fas fa-check-circle"></i> File Uploaded</span>
+                                            @if(in_array(strtolower(pathinfo($selfie->file->file_path ?? '', PATHINFO_EXTENSION)), ['jpg','jpeg','png']))
+                                                <a href="javascript:void(0)" class="btn btn-sm btn-info lightbox-trigger" data-image="{{ $selfie->file->url() }}"><i class="fas fa-eye"></i> View File</a>
+                                            @else
+                                                <a href="{{ $selfie->file->url() }}" target="_blank" class="btn btn-sm btn-info"><i class="fas fa-eye"></i> View File</a>
+                                            @endif
+                                        </div>
                                     @else
+                                        @if($isLocked) <div class="mt-2 text-muted">No file uploaded</div> @endif
+                                    @endif
+                                    
+                                    @if(!$isLocked)
                                         <div class="mb-3">
                                             <div class="custom-control custom-radio custom-control-inline">
                                                 <input type="radio" id="upload_type_device" name="upload_type" class="custom-control-input" value="device" checked>
@@ -282,7 +283,7 @@
                                         
                                         <!-- Device Upload -->
                                         <div id="device_upload_section">
-                                            <input type="file" name="selfie" id="selfie_file" class="form-control-file" accept=".jpg,.jpeg,.png" @if(!isset($kyc) || !$kyc->kyc_step) required @endif>
+                                            <input type="file" name="selfie" id="selfie_file" class="form-control-file" accept=".jpg,.jpeg,.png" @if(!isset($kyc) || !$kyc->kyc_step || !$selfie) required @endif>
                                         </div>
 
                                         <!-- Camera Capture -->
@@ -317,21 +318,21 @@
                             <div class="row">
                                 <div class="col-md-12 mb-4">
                                     <label>Proof of Address <span class="text-danger">*</span> <small class="text-muted">(Utility bill or bank statement within last 3 months)</small></label>
-                                    @if($isLocked)
-                                        @php $addressProof = $userFiles->where('file_name', 'address_proof')->first(); @endphp
-                                        @if($addressProof)
-                                            <div class="mt-2" style="max-width:300px;">
-                                                @if(in_array(strtolower(pathinfo($addressProof->file->file_path ?? '', PATHINFO_EXTENSION)), ['jpg','jpeg','png']))
-                                                    <a href="javascript:void(0)" class="btn btn-sm btn-info w-100 lightbox-trigger" data-image="{{ $addressProof->file->url() }}"><i class="fas fa-eye"></i> View Uploaded Document</a>
-                                                @else
-                                                    <a href="{{ $addressProof->file->url() }}" target="_blank" class="btn btn-sm btn-info w-100"><i class="fas fa-eye"></i> View Uploaded File</a>
-                                                @endif
-                                            </div>
-                                        @else
-                                            <div class="mt-2 text-muted">No file uploaded</div>
-                                        @endif
+                                    @php $addressProof = $userFiles->where('file_name', 'address_proof')->first(); @endphp
+                                    @if($addressProof)
+                                        <div class="mb-2 p-2 border rounded bg-light d-flex align-items-center justify-content-between" style="max-width: 400px;">
+                                            <span class="badge badge-success"><i class="fas fa-check-circle"></i> File Uploaded</span>
+                                            @if(in_array(strtolower(pathinfo($addressProof->file->file_path ?? '', PATHINFO_EXTENSION)), ['jpg','jpeg','png']))
+                                                <a href="javascript:void(0)" class="btn btn-sm btn-info lightbox-trigger" data-image="{{ $addressProof->file->url() }}"><i class="fas fa-eye"></i> View Document</a>
+                                            @else
+                                                <a href="{{ $addressProof->file->url() }}" target="_blank" class="btn btn-sm btn-info"><i class="fas fa-eye"></i> View File</a>
+                                            @endif
+                                        </div>
                                     @else
-                                        <input type="file" name="address_proof" class="form-control-file" accept=".jpg,.jpeg,.png,.pdf" @if(!isset($kyc) || !$kyc->kyc_step) required @endif>
+                                        @if($isLocked) <div class="mt-2 text-muted">No file uploaded</div> @endif
+                                    @endif
+                                    @if(!$isLocked)
+                                        <input type="file" name="address_proof" class="form-control-file" accept=".jpg,.jpeg,.png,.pdf" @if(!isset($kyc) || !$kyc->kyc_step || !$addressProof) required @endif>
                                     @endif
                                 </div>
                             </div>

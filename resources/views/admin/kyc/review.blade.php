@@ -11,12 +11,29 @@
 @if(session('error'))
     <div class="alert alert-danger">{{ session('error') }}</div>
 @endif
+<div class="row">
+    <div class="col-12 mb-3">
+        <div class="card bg-light border-0 shadow-sm">
+            <div class="card-body py-2 px-4 d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="mb-1"><i class="fas fa-user-circle text-primary"></i> {{ $user->kycDetail->full_name ?? $user->name }}</h5>
+                    <span class="text-muted"><i class="fas fa-envelope"></i> {{ $user->email }} | <i class="fas fa-globe"></i> {{ optional($user->kycDetail->country)->name ?? 'N/A' }}</span>
+                </div>
+                <div class="text-right">
+                    <small class="text-muted d-block">Submitted At</small>
+                    <strong><i class="fas fa-calendar-alt"></i>
+                     {{ $user?->kycDetail?->submitted_at ? $user?->kycDetail?->submitted_at->format('d M Y, h:i A') : ($user?->kycDetail?->updated_at ? $user?->kycDetail?->updated_at?->format('d M Y, h:i A') : 'N/A') }}</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="row">
     <div class="col-md-8">
-        <div class="card card-primary">
+        <div class="card card-primary card-outline">
             <div class="card-header">
-                <h3 class="card-title">KYC Details</h3>
+                <h3 class="card-title"><i class="fas fa-info-circle"></i> KYC Details</h3>
             </div>
             <div class="card-body">
                 @if($user->kycDetail)
@@ -96,32 +113,124 @@
             </div>
         </div>
 
-        <div class="card card-secondary">
+        <div class="card card-secondary card-outline">
             <div class="card-header">
-                <h3 class="card-title">Uploaded Documents</h3>
+                <h3 class="card-title"><i class="fas fa-file-alt"></i> Identity & Address Documents</h3>
             </div>
             <div class="card-body">
                 @if($user->kycFiles && $user->kycFiles->count() > 0)
-                    <div class="row">
-                        @foreach($user->kycFiles as $kycFile)
-                            <div class="col-md-4 mb-3">
-                                <div class="border p-2 text-center h-100 d-flex flex-column justify-content-between">
-                                    <p><strong>{{ \Illuminate\Support\Str::title(str_replace('_', ' ', $kycFile->file_name ?? 'Document')) }}</strong></p>
-                                    <div class="mt-auto">
-                                        @if(in_array(strtolower(pathinfo($kycFile->file->file_path ?? '', PATHINFO_EXTENSION)), ['jpg','jpeg','png']))
-                                            <a href="javascript:void(0)" class="lightbox-trigger" data-image="{{ $kycFile->file->url() }}">
-                                                <img src="{{ $kycFile->file->url() }}" alt="Document" class="img-fluid rounded" style="max-height: 150px; object-fit: cover;">
-                                            </a>
-                                        @else
-                                            <a href="{{ $kycFile->file->url() }}" target="_blank" class="btn btn-sm btn-info mt-2"><i class="fas fa-file-pdf"></i> View File</a>
-                                        @endif
+                    @php
+                        $identityFiles = $user->kycFiles->filter(function($f) {
+                            return in_array($f->file_name, ['id_front', 'id_back']);
+                        });
+                        $selfieFiles = $user->kycFiles->filter(function($f) {
+                            return in_array($f->file_name, ['selfie']);
+                        });
+                        $addressFiles = $user->kycFiles->filter(function($f) {
+                            return in_array($f->file_name, ['proof_of_address']);
+                        });
+                        $otherFiles = $user->kycFiles->filter(function($f) {
+                            return !in_array($f->file_name, ['id_front', 'id_back', 'selfie', 'proof_of_address']);
+                        });
+                    @endphp
+
+                    @if($identityFiles->count() > 0)
+                        <h5 class="mt-2 mb-3 border-bottom pb-2">
+                            <i class="fas fa-id-card text-primary"></i> Identity Document 
+                            @if($user->kycDetail && $user->kycDetail->id_type)
+                                <span class="badge badge-info ml-2 text-sm">{{ \Illuminate\Support\Str::title(str_replace('_', ' ', $user->kycDetail->id_type)) }}</span>
+                            @endif
+                        </h5>
+                        <div class="row mb-4">
+                            @foreach($identityFiles as $kycFile)
+                                <div class="col-md-6 mb-3">
+                                    <div class="border p-2 text-center h-100 d-flex flex-column justify-content-between shadow-sm bg-light rounded">
+                                        <p class="text-sm"><strong>{{ \Illuminate\Support\Str::title(str_replace('_', ' ', $kycFile->file_name ?? 'Document')) }}</strong></p>
+                                        <div class="mt-auto">
+                                            @if(in_array(strtolower(pathinfo($kycFile->file->file_path ?? '', PATHINFO_EXTENSION)), ['jpg','jpeg','png']))
+                                                <a href="javascript:void(0)" class="lightbox-trigger" data-image="{{ $kycFile->file->url() }}">
+                                                    <img src="{{ $kycFile->file->url() }}" alt="Document" class="img-fluid rounded border" style="max-height: 200px; object-fit: cover;">
+                                                </a>
+                                            @else
+                                                <a href="{{ $kycFile->file->url() }}" target="_blank" class="btn btn-sm btn-info mt-2"><i class="fas fa-file-pdf"></i> View File</a>
+                                            @endif
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        @endforeach
-                    </div>
+                            @endforeach
+                        </div>
+                    @endif
+
+                    @if($selfieFiles->count() > 0)
+                        <h5 class="mt-2 mb-3 border-bottom pb-2">
+                            <i class="fas fa-camera text-primary"></i> Facial Verification (Selfie)
+                        </h5>
+                        <div class="row mb-4">
+                            @foreach($selfieFiles as $kycFile)
+                                <div class="col-md-6 mb-3">
+                                    <div class="border p-2 text-center h-100 d-flex flex-column justify-content-between shadow-sm bg-light rounded">
+                                        <p class="text-sm"><strong>{{ \Illuminate\Support\Str::title(str_replace('_', ' ', $kycFile->file_name ?? 'Document')) }}</strong></p>
+                                        <div class="mt-auto">
+                                            @if(in_array(strtolower(pathinfo($kycFile->file->file_path ?? '', PATHINFO_EXTENSION)), ['jpg','jpeg','png']))
+                                                <a href="javascript:void(0)" class="lightbox-trigger" data-image="{{ $kycFile->file->url() }}">
+                                                    <img src="{{ $kycFile->file->url() }}" alt="Document" class="img-fluid rounded border" style="max-height: 200px; object-fit: cover;">
+                                                </a>
+                                            @else
+                                                <a href="{{ $kycFile->file->url() }}" target="_blank" class="btn btn-sm btn-info mt-2"><i class="fas fa-file-pdf"></i> View File</a>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
+
+                    @if($addressFiles->count() > 0)
+                        <h5 class="mt-4 mb-3 border-bottom pb-2"><i class="fas fa-map-marked-alt text-primary"></i> Address Verification</h5>
+                        <div class="row">
+                            @foreach($addressFiles as $kycFile)
+                                <div class="col-md-4 mb-3">
+                                    <div class="border p-2 text-center h-100 d-flex flex-column justify-content-between shadow-sm bg-light rounded">
+                                        <p class="text-sm"><strong>{{ \Illuminate\Support\Str::title(str_replace('_', ' ', $kycFile->file_name ?? 'Document')) }}</strong></p>
+                                        <div class="mt-auto">
+                                            @if(in_array(strtolower(pathinfo($kycFile->file->file_path ?? '', PATHINFO_EXTENSION)), ['jpg','jpeg','png']))
+                                                <a href="javascript:void(0)" class="lightbox-trigger" data-image="{{ $kycFile->file->url() }}">
+                                                    <img src="{{ $kycFile->file->url() }}" alt="Document" class="img-fluid rounded border" style="max-height: 120px; object-fit: cover;">
+                                                </a>
+                                            @else
+                                                <a href="{{ $kycFile->file->url() }}" target="_blank" class="btn btn-sm btn-info mt-2"><i class="fas fa-file-pdf"></i> View File</a>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
+
+                    @if($otherFiles->count() > 0)
+                        <h5 class="mt-4 mb-3 border-bottom pb-2"><i class="fas fa-folder-open text-primary"></i> Other Documents</h5>
+                        <div class="row">
+                            @foreach($otherFiles as $kycFile)
+                                <div class="col-md-4 mb-3">
+                                    <div class="border p-2 text-center h-100 d-flex flex-column justify-content-between shadow-sm bg-light rounded">
+                                        <p class="text-sm"><strong>{{ \Illuminate\Support\Str::title(str_replace('_', ' ', $kycFile->file_name ?? 'Document')) }}</strong></p>
+                                        <div class="mt-auto">
+                                            @if(in_array(strtolower(pathinfo($kycFile->file->file_path ?? '', PATHINFO_EXTENSION)), ['jpg','jpeg','png']))
+                                                <a href="javascript:void(0)" class="lightbox-trigger" data-image="{{ $kycFile->file->url() }}">
+                                                    <img src="{{ $kycFile->file->url() }}" alt="Document" class="img-fluid rounded border" style="max-height: 120px; object-fit: cover;">
+                                                </a>
+                                            @else
+                                                <a href="{{ $kycFile->file->url() }}" target="_blank" class="btn btn-sm btn-info mt-2"><i class="fas fa-file-pdf"></i> View File</a>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
+
                 @else
-                    <p>No documents uploaded.</p>
+                    <div class="alert alert-warning"><i class="fas fa-exclamation-triangle"></i> No documents uploaded.</div>
                 @endif
             </div>
         </div>
@@ -204,8 +313,8 @@
         </div>
         <div class="modal-body">
             <div class="form-group">
-                <label for="rejection_reason">Reason for Rejection (Visible to User)</label>
-                <select name="rejection_reason" id="rejection_reason" class="form-control" required>
+                <label for="rejection_type">Reason for Rejection (Visible to User)</label>
+                <select name="rejection_type" id="rejection_type" class="form-control" required>
                     <option value="">Select a reason</option>
                     <option value="Blurry ID document">Blurry ID document</option>
                     <option value="Mismatch in selfie">Mismatch in selfie</option>
@@ -215,8 +324,8 @@
                 </select>
             </div>
             <div class="form-group" id="custom_reason_group" style="display: none;">
-                <label for="custom_reason">Custom Reason</label>
-                <textarea name="custom_reason" id="custom_reason" class="form-control" rows="3" placeholder="Enter custom reason..."></textarea>
+                <label for="rejection_reason">Optional Comment / Custom Reason</label>
+                <textarea name="rejection_reason" id="rejection_reason" class="form-control" rows="3" placeholder="Enter custom reason or additional details..."></textarea>
             </div>
         </div>
         <div class="modal-footer">
@@ -286,13 +395,13 @@
             });
 
             // Rejection reason dropdown toggle
-            $('#rejection_reason').change(function() {
+            $('#rejection_type').change(function() {
                 if($(this).val() === 'Other') {
                     $('#custom_reason_group').show();
-                    $('#custom_reason').attr('required', true);
+                    $('#rejection_reason').attr('required', true);
                 } else {
-                    $('#custom_reason_group').hide();
-                    $('#custom_reason').removeAttr('required');
+                    $('#custom_reason_group').show();
+                    $('#rejection_reason').removeAttr('required');
                 }
             });
         });

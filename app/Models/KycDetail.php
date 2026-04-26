@@ -11,6 +11,13 @@ class KycDetail extends Model
 
     protected $guarded = ['id'];
 
+    protected $casts = [
+        'submitted_at' => 'datetime',
+        'approved_at' => 'datetime',
+        'rejected_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);

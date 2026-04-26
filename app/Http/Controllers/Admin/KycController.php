@@ -104,12 +104,12 @@ class KycController extends Controller
             KycHistory::create([
                 'kyc_detail_id' => $kycDetail->id,
                 'user_id' => $user->id,
-                'description' => 'User started KYC application'
+                'description' => ($user?->name ?: 'User') . ' started KYC application'
             ]);
         }
 
         if ($step == 6) {
-            $description = ($kycDetail->kyc_status == 'rejected') ? 'User resubmitted KYC application' : 'User submitted KYC application';
+            $description = ($kycDetail->kyc_status == 'rejected') ? ($user?->name ?: 'User') . ' resubmitted KYC application' : ($user?->name ?: 'User') . ' submitted KYC application';
             KycHistory::create([
                 'kyc_detail_id' => $kycDetail->id,
                 'user_id' => $user->id,
@@ -126,6 +126,12 @@ class KycController extends Controller
 
     private function handleFileUpload($userId, $uploadedFile, $fileName)
     {
+        $existingKycFile = KycFile::where('user_id', $userId)->where('file_name', $fileName)->first();
+        if ($existingKycFile && $existingKycFile->file) {
+            Storage::disk($existingKycFile->file->disk)->delete($existingKycFile->file->file_path);
+            $existingKycFile->file->delete();
+        }
+
         $path = $uploadedFile->store('kyc', 'public');
 
         $fileRecord = File::create([

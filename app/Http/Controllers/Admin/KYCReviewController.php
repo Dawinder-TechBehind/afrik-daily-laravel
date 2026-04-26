@@ -32,13 +32,15 @@ class KYCReviewController extends Controller
             if ($user->kycDetail) {
                 $user->kycDetail->update([
                     'kyc_status' => 'approved',
+                    'rejection_type' => null,
                     'rejection_reason' => null
                 ]);
 
-                KycHistory::create([
+                \App\Models\KycHistory::create([
                     'kyc_detail_id' => $user->kycDetail->id,
                     'user_id' => auth()->id(),
-                    'description' => 'Admin approved KYC application'
+                    'description' => auth()->user()->name . ' approved KYC',
+                    'note' => 'Admin approved the KYC submission.'
                 ]);
             }
 
@@ -53,11 +55,9 @@ class KYCReviewController extends Controller
     public function reject(Request $request, User $user)
     {
         $request->validate([
-            'rejection_reason' => 'required|string|max:1000',
-            'custom_reason' => 'nullable|string|max:1000'
+            'rejection_type' => 'required|string',
+            'rejection_reason' => 'nullable|string|max:1000'
         ]);
-
-        $reason = $request->rejection_reason === 'Other' ? $request->custom_reason : $request->rejection_reason;
 
         try {
             DB::beginTransaction();
@@ -65,14 +65,15 @@ class KYCReviewController extends Controller
             if ($user->kycDetail) {
                 $user->kycDetail->update([
                     'kyc_status' => 'rejected',
-                    'rejection_reason' => $reason
+                    'rejection_type' => $request->rejection_type,
+                    'rejection_reason' => $request->rejection_reason
                 ]);
 
-                KycHistory::create([
+                \App\Models\KycHistory::create([
                     'kyc_detail_id' => $user->kycDetail->id,
                     'user_id' => auth()->id(),
-                    'description' => 'Admin rejected KYC application',
-                    'note' => $reason
+                    'description' => auth()->user()->name . ' rejected KYC - ' . $request->rejection_type,
+                    'note' => $request->rejection_reason
                 ]);
             }
 

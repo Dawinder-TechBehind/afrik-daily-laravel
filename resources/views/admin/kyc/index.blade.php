@@ -55,9 +55,14 @@
             Your identity has been fully verified. Profile locked to preserve integrity.
         </div>
     @elseif($kyc->kyc_status == 'rejected')
-        <div class="alert alert-danger">
+        <div class="alert alert-danger shadow-sm">
             <h5><i class="icon fas fa-ban"></i> Application Rejected!</h5>
             There was an issue verifying your submitted identity details. Form editing is unlocked; please review and re-submit your details.
+            <hr>
+            <strong>Reason:</strong> {{ $kyc->rejection_type ?? 'Verification Failed' }}<br>
+            @if($kyc->rejection_reason)
+                <span class="text-sm d-block mt-1"><i class="fas fa-info-circle"></i> {{ $kyc->rejection_reason }}</span>
+            @endif
         </div>
     @endif
 @endif

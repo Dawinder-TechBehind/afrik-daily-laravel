@@ -39,22 +39,25 @@ class KycRequest extends FormRequest
         }
 
         if ($step == 2) {
+            $hasIdFront = auth()->user()->kycFiles()->where('file_name', 'id_front')->exists();
             return [
                 'id_type' => 'required|in:national_id,passport,drivers_license',
-                'id_front' => 'required|file|mimes:jpg,png,pdf|max:2048',
+                'id_front' => ($hasIdFront ? 'nullable' : 'required') . '|file|mimes:jpg,png,pdf|max:2048',
                 'id_back' => 'nullable|file|mimes:jpg,png,pdf|max:2048',
             ];
         }
 
         if ($step == 3) {
+            $hasSelfie = auth()->user()->kycFiles()->where('file_name', 'selfie')->exists();
             return [
-                'selfie' => 'required|file|mimes:jpg,png|max:2048',
+                'selfie' => ($hasSelfie ? 'nullable' : 'required') . '|file|mimes:jpg,png|max:2048',
             ];
         }
 
         if ($step == 4) {
+            $hasAddressProof = auth()->user()->kycFiles()->where('file_name', 'address_proof')->exists();
             return [
-                'address_proof' => 'required|file|mimes:jpg,png,pdf|max:2048',
+                'address_proof' => ($hasAddressProof ? 'nullable' : 'required') . '|file|mimes:jpg,png,pdf|max:2048',
             ];
         }
 
